@@ -48,6 +48,12 @@ const TweetBox = (props: TweetBoxProps) => {
   };
   const handleSubmit = async () => {
     try {
+      console.log(content, images, parentId);
+      if (parentId) {
+        await httpService.createComment(parentId, content);
+      } else {
+        await httpService.createPost({ content, images, parentId });
+      }
       setContent("");
       setImages([]);
       setImagesPreview([]);

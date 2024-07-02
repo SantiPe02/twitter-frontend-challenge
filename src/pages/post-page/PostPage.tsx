@@ -1,4 +1,4 @@
-import React, { Component, useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { StyledContainer } from "../../components/common/Container";
 import Tweet from "../../components/tweet/Tweet";
 import Loader from "../../components/loader/Loader";
@@ -8,14 +8,13 @@ import { StyledH5 } from "../../components/common/text";
 import { StyledFeedContainer } from "../home-page/components/contentContainer/FeedContainer";
 import CommentFeed from "../../components/feed/CommentFeed";
 import { useParams } from "react-router-dom";
+import { Post } from "../../service";
 
 const PostPage = () => {
   const { id } = useParams();
   const postId = id ? id : "";
-  const [post, setPost] = useState();
+  const [post, setPost] = useState<Post>();
   const service = new HttpService().service;
-
-  console.log(postId);
 
   useEffect(() => {
     fetchPost();
@@ -25,6 +24,7 @@ const PostPage = () => {
     service
       .getPostById(postId)
       .then((res) => {
+        console.log(res);
         setPost(res);
       })
       .catch((e) => {
