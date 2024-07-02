@@ -50,7 +50,7 @@ const TweetBox = (props: TweetBoxProps) => {
     try {
       console.log(content, images, parentId);
       if (parentId) {
-        await httpService.createComment(parentId, content);
+        await httpService.createComment({parentId, content, images});
       } else {
         await httpService.createPost({ content, images, parentId });
       }
