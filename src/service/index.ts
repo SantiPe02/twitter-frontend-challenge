@@ -20,7 +20,7 @@ export interface PostData {
 export interface Post {
   id: string;
   content: string;
-  parentId?: string;
+  commentPostReference?: string;
   images?: string[];
   createdAt: Date;
   authorId: string;

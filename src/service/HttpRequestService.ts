@@ -301,6 +301,21 @@ const httpRequestService = {
     });
   },
 
+  createComment: async (postId: string, content: string) => {
+    const res = await axios.post(
+      `${url}/comment/${postId}`,
+      { content },
+      {
+        headers: {
+          Authorization: localStorage.getItem("token"),
+        },
+      }
+    );
+
+    if (res.status === 201) {
+      return res.data;
+    }
+  },
   getPaginatedCommentsByPostId: async (
     id: string,
     limit: number,
@@ -320,7 +335,7 @@ const httpRequestService = {
     }
   },
   getCommentsByPostId: async (id: string) => {
-    const res = await axios.get(`${url}/post/comment/by_post/${id}`, {
+    const res = await axios.get(`${url}/comment/${id}`, {
       headers: {
         Authorization: localStorage.getItem("token"),
       },

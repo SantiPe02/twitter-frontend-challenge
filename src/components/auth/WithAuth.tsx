@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { Navigate, Outlet } from "react-router-dom";
 
-const   WithAuth = () => {
+const WithAuth = () => {
   const token = localStorage.getItem("token");
   const [isAuthenticated, setIsAuthenticated] = useState<boolean | null>(null);
 
@@ -21,7 +21,7 @@ const   WithAuth = () => {
     return <Navigate to="/sign-in" replace />;
   }
 
-  return <Outlet />
+  return <Outlet />;
 };
 
 export default WithAuth;
