@@ -19,6 +19,7 @@ import { StyledP } from "../common/text";
 import { useHttpRequestService } from "../../service/HttpRequestService";
 import { User } from "../../service";
 import ProfileLogoutPrompt from "../profile-logout/ProfileLogoutPrompt";
+import { useGetMe } from "../../service/reactQueries";
 
 const NavBar = () => {
   const location = useLocation();
@@ -26,16 +27,8 @@ const NavBar = () => {
   const [tweetModalOpen, setTweetModalOpen] = useState(false);
   const [logoutOpen, setLogoutOpen] = useState(false);
   const service = useHttpRequestService();
-  const [user, setUser] = useState<User>();
   const { t } = useTranslation();
-
-  useEffect(() => {
-    handleGetUser().then((r) => setUser(r));
-  }, []);
-
-  const handleGetUser = async () => {
-    return await service.me();
-  };
+  const { data: user } = useGetMe();
 
   const handleAvatarClick = () => {
     if (window.innerWidth < 1265) {

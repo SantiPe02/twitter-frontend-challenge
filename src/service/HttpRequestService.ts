@@ -99,7 +99,7 @@ const httpRequestService = {
   createReaction: async (postId: string, reaction: string) => {
     const res = await axios.post(
       `${url}/reaction/${postId}`,
-      { type: reaction },
+      { reactionType: reaction },
       {
         headers: getAuthHeaders(),
       }
@@ -108,8 +108,9 @@ const httpRequestService = {
       return res.data;
     }
   },
-  deleteReaction: async (reactionId: string) => {
-    const res = await axios.delete(`${url}/reaction/${reactionId}`, {
+  deleteReaction: async (postId: string, reaction: string) => {
+    const res = await axios.delete(`${url}/reaction/${postId}`, {
+      data: { reactionType: reaction },
       headers: getAuthHeaders(),
     });
     if (res.status === 200) {
@@ -118,7 +119,7 @@ const httpRequestService = {
   },
   followUser: async (userId: string) => {
     const res = await axios.post(
-      `${url}/follow/${userId}`,
+      `${url}/follower/follow/${userId}`,
       {},
       {
         headers: getAuthHeaders(),
@@ -129,7 +130,7 @@ const httpRequestService = {
     }
   },
   unfollowUser: async (userId: string) => {
-    const res = await axios.delete(`${url}/follow/${userId}`, {
+    const res = await axios.delete(`${url}/follower/unfollow/${userId}`, {
       headers: getAuthHeaders(),
     });
     if (res.status === 200) {
@@ -140,10 +141,9 @@ const httpRequestService = {
     try {
       const cancelToken = axios.CancelToken.source();
 
-      const response = await axios.get(`${url}/user/search`, {
+      const response = await axios.get(`${url}/user/by_username/${username}`, {
         headers: getAuthHeaders(),
         params: {
-          username,
           limit,
           skip,
         },
@@ -211,7 +211,7 @@ const httpRequestService = {
   },
 
   deleteProfile: async () => {
-    const res = await axios.delete(`${url}/user/me`, {
+    const res = await axios.delete(`${url}/user`, {
       headers: getAuthHeaders(),
     });
 
@@ -313,9 +313,4 @@ const httpRequestService = {
 
 const useHttpRequestService = () => httpRequestService;
 
-// For class component (remove when unused)
-class HttpService {
-  service = httpRequestService;
-}
-
-export { useHttpRequestService, HttpService };
+export { useHttpRequestService };

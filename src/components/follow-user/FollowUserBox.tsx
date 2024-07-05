@@ -1,11 +1,13 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import Button from "../button/Button";
-import { useHttpRequestService } from "../../service/HttpRequestService";
 import UserDataBox from "../user-data-box/UserDataBox";
 import { useTranslation } from "react-i18next";
 import { ButtonType } from "../button/StyledButton";
 import "./FollowUserBox.css";
-import { Author, User } from "../../service";
+import {
+  useFollowUserMutation,
+  useUnfollowUserMutation,
+} from "../../service/reactQueries";
 
 interface FollowUserBoxProps {
   profilePicture?: string;
@@ -21,27 +23,16 @@ const FollowUserBox = ({
   id,
 }: FollowUserBoxProps) => {
   const { t } = useTranslation();
-  const service = useHttpRequestService();
-  const [user, setUser] = useState<User>();
-
-  useEffect(() => {
-    handleGetUser().then((r) => {
-      setUser(r);
-      setIsFollowing(r?.following.some((f: Author) => f.id === id));
-    });
-  }, []);
-
-  const handleGetUser = async () => {
-    return await service.me();
-  };
-
   const [isFollowing, setIsFollowing] = useState(false);
+
+  const followMutation = useFollowUserMutation();
+  const unfollowMutation = useUnfollowUserMutation();
 
   const handleFollow = async () => {
     if (isFollowing) {
-      await service.unfollowUser(id);
+      unfollowMutation.mutate(id);
     } else {
-      await service.followUser(id);
+      followMutation.mutate(id);
     }
     setIsFollowing(!isFollowing);
   };
