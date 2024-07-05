@@ -27,11 +27,14 @@ export interface Post {
   author: Author;
   reactions: Reaction[];
   comments: Post[];
+  qtyComments: number;
+  qtyLikes: number;
+  qtyRetweets: number;
 }
 
 export interface Reaction {
   id: string;
-  type: string;
+  reactionType: string;
   createdAt: Date;
   userId: string;
   postId: string;

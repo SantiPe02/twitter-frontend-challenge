@@ -1,7 +1,7 @@
-import React, { useEffect, useState } from "react";
+import { useState } from "react";
 import { StyledTweetContainer } from "./TweetContainer";
 import AuthorData from "./user-post-data/AuthorData";
-import type { Post, User } from "../../service";
+import type { Post } from "../../service";
 import { StyledReactionsContainer } from "./ReactionsContainer";
 import Reaction from "./reaction/Reaction";
 import { useHttpRequestService } from "../../service/HttpRequestService";
@@ -12,6 +12,12 @@ import DeletePostModal from "./delete-post-modal/DeletePostModal";
 import ImageContainer from "./tweet-image/ImageContainer";
 import CommentModal from "../comment/comment-modal/CommentModal";
 import { useNavigate } from "react-router-dom";
+import {
+  useCreateReaction,
+  useDeleteReaction,
+  useGetCommentsByPostId,
+  useGetMe,
+} from "../../service/reactQueries";
 
 interface TweetProps {
   post: Post;
@@ -23,38 +29,39 @@ const Tweet = ({ post }: TweetProps) => {
   const [showCommentModal, setShowCommentModal] = useState<boolean>(false);
   const service = useHttpRequestService();
   const navigate = useNavigate();
-  const [user, setUser] = useState<User>();
-
-  useEffect(() => {
-    handleGetUser().then((r) => setUser(r));
-  }, []);
-
-  const handleGetUser = async () => {
-    return await service.me();
-  };
+  const { data: user } = useGetMe();
+  const createReactionMutation = useCreateReaction();
+  const deleteReactionMutation = useDeleteReaction();
+  const { data: comments, isLoading } = useGetCommentsByPostId(post.id);
 
   const getCountByType = (type: string): number => {
-    return actualPost?.reactions?.filter((r) => r.type === type).length ?? 0;
+    return (
+      actualPost?.reactions?.filter((r) => r.reactionType === type).length ?? 0
+    );
   };
 
   const handleReaction = async (type: string) => {
     const reacted = actualPost.reactions.find(
-      (r) => r.type === type && r.userId === user?.id
+      (r) => r.reactionType === type && r.userId === user?.id
     );
     if (reacted) {
-      await service.deleteReaction(reacted.id);
+      deleteReactionMutation.mutate({ postId: actualPost.id, reaction: type });
     } else {
-      await service.createReaction(actualPost.id, type);
+      createReactionMutation.mutate({ postId: actualPost.id, reaction: type });
     }
     const newPost = await service.getPostById(post.id);
     setActualPost(newPost);
   };
 
-  // const hasReactedByType = (type: string): boolean => {
-  //   return actualPost.reactions.some(
-  //       (r) => r.type === type && r.userId === user?.id
-  //   );
-  // };
+  const hasReactedByType = (type: string): boolean => {
+    return actualPost.reactions.some((r) => {
+      return r.reactionType === type && r.userId === user?.id;
+    });
+  };
+
+  if (isLoading) {
+    return null;
+  }
 
   return (
     <StyledTweetContainer>
@@ -97,35 +104,35 @@ const Tweet = ({ post }: TweetProps) => {
           <ImageContainer images={post.images} />
         </StyledContainer>
       )}
-      <StyledReactionsContainer>
-        <Reaction
-          img={IconType.CHAT}
-          count={actualPost?.comments?.length}
-          reactionFunction={() =>
-            window.innerWidth > 600
-              ? setShowCommentModal(true)
-              : navigate(`/compose/comment/${post.id}`)
-          }
-          increment={0}
-          reacted={false}
-        />
-        <Reaction
-          img={IconType.RETWEET}
-          count={getCountByType("RETWEET")}
-          reactionFunction={() => handleReaction("RETWEET")}
-          increment={1}
-          // reacted={hasReactedByType("RETWEET")}
-          reacted={false}
-        />
-        <Reaction
-          img={IconType.LIKE}
-          count={getCountByType("LIKE")}
-          reactionFunction={() => handleReaction("LIKE")}
-          increment={1}
-          // reacted={hasReactedByType("LIKE")}
-          reacted={false}
-        />
-      </StyledReactionsContainer>
+      {comments && (
+        <StyledReactionsContainer>
+          <Reaction
+            img={IconType.CHAT}
+            count={comments.length}
+            reactionFunction={() =>
+              window.innerWidth > 600
+                ? setShowCommentModal(true)
+                : navigate(`/compose/comment/${post.id}`)
+            }
+            increment={0}
+            reacted={false}
+          />
+          <Reaction
+            img={IconType.RETWEET}
+            count={getCountByType("RETWEET")}
+            reactionFunction={() => handleReaction("RETWEET")}
+            increment={1}
+            reacted={hasReactedByType("RETWEET")}
+          />
+          <Reaction
+            img={IconType.LIKE}
+            count={getCountByType("LIKE")}
+            reactionFunction={() => handleReaction("LIKE")}
+            increment={1}
+            reacted={hasReactedByType("LIKE")}
+          />
+        </StyledReactionsContainer>
+      )}
       <CommentModal
         show={showCommentModal}
         post={post}

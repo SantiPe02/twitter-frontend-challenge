@@ -1,4 +1,4 @@
-import React, { ChangeEvent, useEffect, useState } from "react";
+import { ChangeEvent, useState } from "react";
 import Button from "../button/Button";
 import TweetInput from "../tweet-input/TweetInput";
 import { useHttpRequestService } from "../../service/HttpRequestService";
@@ -12,8 +12,13 @@ import { StyledTweetBoxContainer } from "./TweetBoxContainer";
 import { StyledContainer } from "../common/Container";
 import { StyledButtonContainer } from "./ButtonContainer";
 import { useDispatch, useSelector } from "react-redux";
-import { User } from "../../service";
 import { RootState } from "../../redux/store";
+import {
+  useCreateComment,
+  useCreatePost,
+  useGetMe,
+  useGetPosts,
+} from "../../service/reactQueries";
 
 interface TweetBoxProps {
   parentId?: string;
@@ -29,37 +34,36 @@ const TweetBox = (props: TweetBoxProps) => {
   const [imagesPreview, setImagesPreview] = useState<string[]>([]);
 
   const { length, query } = useSelector((state: RootState) => state.user);
-  const httpService = useHttpRequestService();
   const dispatch = useDispatch();
   const { t } = useTranslation();
+  const { data: user } = useGetMe();
+  const { data: posts } = useGetPosts(query);
   const service = useHttpRequestService();
-  const [user, setUser] = useState<User>();
-
-  useEffect(() => {
-    handleGetUser().then((r) => setUser(r));
-  }, []);
-
-  const handleGetUser = async () => {
-    return await service.me();
-  };
 
   const handleChange = (e: ChangeEvent<HTMLTextAreaElement>) => {
     setContent(e.target.value);
   };
+
+  const createPostMutation = useCreatePost();
+  const createCommentMutation = useCreateComment();
   const handleSubmit = async () => {
     try {
-      console.log(content, images, parentId);
       if (parentId) {
-        await httpService.createComment({parentId, content, images});
+        await service
+          .createComment({ content, images, parentId })
+          .then(async () => {
+            const comments = await service.getCommentsByPostId(parentId);
+            dispatch(updateFeed(comments));
+            dispatch(setLength(comments.length));
+          });
       } else {
-        await httpService.createPost({ content, images, parentId });
+        createPostMutation.mutate({ content, images, parentId });
+        dispatch(updateFeed(posts));
+        dispatch(setLength(posts.length));
       }
       setContent("");
       setImages([]);
       setImagesPreview([]);
-      dispatch(setLength(length + 1));
-      const posts = await httpService.getPosts(query);
-      dispatch(updateFeed(posts));
       close && close();
     } catch (e) {
       console.log(e);
