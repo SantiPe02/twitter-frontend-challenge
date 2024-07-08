@@ -20,6 +20,7 @@ interface SignUpData {
 const SignUpPage = () => {
   const [data, setData] = useState<Partial<SignUpData>>({});
   const [error, setError] = useState(false);
+  const [errorMsg, setErrorMsg] = useState("");
 
   const httpRequestService = useHttpRequestService();
   const navigate = useNavigate();
@@ -31,10 +32,25 @@ const SignUpPage = () => {
     };
   const handleSubmit = async () => {
     const { confirmPassword, ...requestData } = data;
+    if (!checkPassword()) {
+      setErrorMsg("Passwords do not match");
+      setError(true);
+      return;
+    }
     httpRequestService
       .signUp(requestData)
       .then(() => navigate("/"))
-      .catch(() => setError(false));
+      .catch((error) => {
+        if (error.response.status === 409) {
+          setErrorMsg("Username or email already exists");
+        } else {
+          setErrorMsg("Check your credentials and try again");
+        }
+        setError(true);
+      });
+  };
+  const checkPassword = () => {
+    return data.password === data.confirmPassword;
   };
 
   return (
@@ -45,6 +61,7 @@ const SignUpPage = () => {
             <img src={logo} alt="Twitter Logo" />
             <StyledH3>{t("title.register")}</StyledH3>
           </div>
+          <p className="error-message">{errorMsg}</p>
           <div className={"input-container"}>
             <LabeledInput
               required

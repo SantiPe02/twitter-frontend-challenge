@@ -26,7 +26,6 @@ const NavBar = () => {
   const navigate = useNavigate();
   const [tweetModalOpen, setTweetModalOpen] = useState(false);
   const [logoutOpen, setLogoutOpen] = useState(false);
-  const service = useHttpRequestService();
   const { t } = useTranslation();
   const { data: user } = useGetMe();
 

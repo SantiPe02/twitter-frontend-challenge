@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import Modal from "../../modal/Modal";
 import logo from "../../../assets/logo.png";
 import Button from "../../button/Button";
@@ -9,20 +9,19 @@ import { ButtonType } from "../../button/StyledButton";
 import { StyledPromptContainer } from "./PromptContainer";
 import { StyledContainer } from "../../common/Container";
 import { StyledP } from "../../common/text";
-import { useHttpRequestService } from "../../../service/HttpRequestService";
-import { User } from "../../../service";
 import { useGetMe } from "../../../service/reactQueries";
+import { useClickOutside } from "../../../hooks/useClickOutside";
 
 interface LogoutPromptProps {
   show: boolean;
+  onClose: () => void;
 }
 
-const LogoutPrompt = ({ show }: LogoutPromptProps) => {
+const LogoutPrompt = ({ show, onClose }: LogoutPromptProps) => {
   const [showPrompt, setShowPrompt] = useState<boolean>(show);
   const [showModal, setShowModal] = useState<boolean>(false);
   const navigate = useNavigate();
   const { t, i18n } = useTranslation();
-  const service = useHttpRequestService();
   const { data: user } = useGetMe();
 
   const handleClick = () => {
@@ -46,10 +45,20 @@ const LogoutPrompt = ({ show }: LogoutPromptProps) => {
     setShowPrompt(show);
   }, [show]);
 
+  const handler = () => {
+    if(showModal) {
+      return
+    }
+    onClose();
+  };
+  const backgroundRef = useRef<HTMLDivElement | null>(null);
+
+  useClickOutside(backgroundRef, handler);
+
   return (
     <>
       {showPrompt && (
-        <StyledPromptContainer>
+        <StyledPromptContainer ref={backgroundRef}>
           <StyledContainer
             flexDirection={"row"}
             gap={"16px"}

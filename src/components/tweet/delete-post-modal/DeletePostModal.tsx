@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useRef, useState } from "react";
 import { DeleteIcon } from "../../icon/Icon";
 import Modal from "../../modal/Modal";
 import Button from "../../button/Button";
@@ -9,6 +9,7 @@ import { useAppDispatch, useAppSelector } from "../../../redux/hooks";
 import { Post } from "../../../service";
 import { StyledDeletePostModalContainer } from "./DeletePostModalContainer";
 import { useDeletePostMutation } from "../../../service/reactQueries";
+import { useClickOutside } from "../../../hooks/useClickOutside";
 
 interface DeletePostModalProps {
   show: boolean;
@@ -43,11 +44,24 @@ export const DeletePostModal = ({
     onClose();
   };
 
+  const outsideClickRef = useRef<HTMLDivElement | null>(null);
+  const handler = () => {
+    if(showModal) {
+      return
+    }
+    onClose();
+  };
+
+  useClickOutside(outsideClickRef, handler)
+
   return (
     <>
       {show && (
         <>
-          <StyledDeletePostModalContainer onClick={() => setShowModal(true)}>
+          <StyledDeletePostModalContainer
+            ref={outsideClickRef}
+            onClick={() => setShowModal(true)}
+          >
             <DeleteIcon />
             <p>{t("buttons.delete")}</p>
           </StyledDeletePostModalContainer>
