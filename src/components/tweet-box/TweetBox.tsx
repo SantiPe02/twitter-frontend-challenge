@@ -58,8 +58,8 @@ const TweetBox = (props: TweetBoxProps) => {
           });
       } else {
         createPostMutation.mutate({ content, images, parentId });
-        dispatch(updateFeed(posts));
-        dispatch(setLength(posts.length));
+        // dispatch(updateFeed(posts));
+        // dispatch(setLength(posts.length));
       }
       setContent("");
       setImages([]);
