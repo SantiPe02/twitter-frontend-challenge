@@ -10,6 +10,7 @@ interface InputWithLabelProps {
   required: boolean;
   error?: boolean;
   onChange?: (event: ChangeEvent<HTMLInputElement>) => void;
+  name?: string;
 }
 
 const LabeledInput = ({
@@ -19,6 +20,7 @@ const LabeledInput = ({
   error,
   onChange,
   type = "text",
+  name,
 }: InputWithLabelProps) => {
   const inputRef = useRef<HTMLInputElement | null>(null);
   const [focus, setFocus] = useState(false);
@@ -56,6 +58,7 @@ const LabeledInput = ({
         onChange={onChange}
         className={error ? "error" : ""}
         ref={inputRef}
+        name={name}
       />
     </StyledInputContainer>
   );
