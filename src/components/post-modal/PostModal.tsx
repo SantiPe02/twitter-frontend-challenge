@@ -10,15 +10,22 @@ interface PostModalProps {
 }
 
 export const PostModal = ({ onClose, show, children }: PostModalProps) => {
+
+  const handleModalClick = (event: React.MouseEvent) => {
+    event.stopPropagation();
+  };
+
   return (
     <>
       {show && (
-        <StyledBlurredBackground>
-          <StyledTweetModalContainer>
-            <ModalCloseButton onClick={onClose} />
-            {children}
-          </StyledTweetModalContainer>
-        </StyledBlurredBackground>
+        <div onClick={onClose}>
+          <StyledBlurredBackground>
+            <StyledTweetModalContainer onClick={handleModalClick}>
+              <ModalCloseButton onClick={onClose} />
+              {children}
+            </StyledTweetModalContainer>
+          </StyledBlurredBackground>
+        </div>
       )}
     </>
   );
