@@ -3,11 +3,11 @@ import Button from "../button/Button";
 import UserDataBox from "../user-data-box/UserDataBox";
 import { useTranslation } from "react-i18next";
 import { ButtonType } from "../button/StyledButton";
-import "./FollowUserBox.css";
 import {
   useFollowUserMutation,
   useUnfollowUserMutation,
 } from "../../service/reactQueries";
+import { StyledFollowUserBox } from "./StyledFollowUserBox";
 
 interface FollowUserBoxProps {
   profilePicture?: string;
@@ -38,7 +38,7 @@ const FollowUserBox = ({
   };
 
   return (
-    <div className="box-container">
+    <StyledFollowUserBox>
       <UserDataBox
         id={id}
         name={name!}
@@ -51,7 +51,7 @@ const FollowUserBox = ({
         size={"SMALL"}
         onClick={handleFollow}
       />
-    </div>
+    </StyledFollowUserBox>
   );
 };
 
