@@ -20,7 +20,7 @@ export const StyledToastContainer = styled.div`
         case ToastType.ALERT:
           return props.theme.colors.errorContainer;
         default:
-          return props.theme.colors.errorContainer;
+          return props.theme.colors.main;
       }
     }};
   background: ${(props: ToastContainerProps) => props.theme.background};
@@ -31,7 +31,7 @@ export const StyledToastContainer = styled.div`
         case ToastType.ALERT:
           return props.theme.colors.errorContainer;
         default:
-          return props.theme.colors.errorContainer;
+          return props.theme.colors.main;
       }
     }};
     margin: 0;

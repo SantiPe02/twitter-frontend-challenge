@@ -19,6 +19,8 @@ import {
   useGetMe,
   useGetPosts,
 } from "../../service/reactQueries";
+import { useToastContext } from "../../hooks/useToastContext";
+import { ToastType } from "../toast/Toast";
 
 interface TweetBoxProps {
   parentId?: string;
@@ -44,22 +46,18 @@ const TweetBox = (props: TweetBoxProps) => {
     setContent(e.target.value);
   };
 
+  const { setToastMessage } = useToastContext();
+
   const createPostMutation = useCreatePost();
   const createCommentMutation = useCreateComment();
   const handleSubmit = async () => {
     try {
       if (parentId) {
-        await service
-          .createComment({ content, images, parentId })
-          .then(async () => {
-            const comments = await service.getCommentsByPostId(parentId);
-            dispatch(updateFeed(comments));
-            dispatch(setLength(comments.length));
-          });
+        createCommentMutation.mutate({ content, images, parentId });
+        setToastMessage("Comment sent", ToastType.SUCCESS);
       } else {
         createPostMutation.mutate({ content, images, parentId });
-        // dispatch(updateFeed(posts));
-        // dispatch(setLength(posts.length));
+        setToastMessage("Post sent", ToastType.SUCCESS);
       }
       setContent("");
       setImages([]);

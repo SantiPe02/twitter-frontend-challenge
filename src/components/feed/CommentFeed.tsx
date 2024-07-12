@@ -9,10 +9,6 @@ const CommentFeed = ({ postId }: CommentFeedProps) => {
     postId,
   });
 
-  return (
-    <>
-      <Feed posts={posts} loading={loading} />
-    </>
-  );
+  return <Feed posts={posts} loading={loading} />;
 };
 export default CommentFeed;

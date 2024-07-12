@@ -10,6 +10,8 @@ import { ButtonType } from "../../../components/button/StyledButton";
 import { StyledH3 } from "../../../components/common/text";
 import * as Yup from "yup";
 import { ErrorMessage, Field, Form, Formik } from "formik";
+import { useToastContext } from "../../../hooks/useToastContext";
+import { ToastType } from "../../../components/toast/Toast";
 
 interface SignUpData {
   name: string;
@@ -26,6 +28,8 @@ const SignUpPage = () => {
   const navigate = useNavigate();
   const { t } = useTranslation();
 
+  const { setToastMessage } = useToastContext();
+
   const handleSubmit = async (values: SignUpData, { setSubmitting }: any) => {
     console.log(values);
     const { confirmPassword, ...requestData } = values;
@@ -33,12 +37,12 @@ const SignUpPage = () => {
       .signUp(requestData)
       .then(() => navigate("/"))
       .catch((error) => {
-        if (error.response.status === 409) {
+        if (error.response?.status === 409) {
           setError(true);
-          setErrorMsg("Username or email already exists");
+          setToastMessage("Username or email already exists", ToastType.ALERT);
         } else {
           setError(true);
-          setErrorMsg("Check your credentials and try again");
+          setToastMessage("Check your credentials and try again", ToastType.ALERT);
         }
       })
       .finally(() => setSubmitting(false));
@@ -173,6 +177,7 @@ const SignUpPage = () => {
                     buttonType={ButtonType.OUTLINED}
                     size={"MEDIUM"}
                     onClick={() => navigate("/sign-in")}
+                    type="button"
                   />
                 </div>
               </Form>
