@@ -9,6 +9,8 @@ import Button from "../../../components/button/Button";
 import { ButtonType } from "../../../components/button/StyledButton";
 import { StyledH3 } from "../../../components/common/text";
 import { Field, Form, Formik } from "formik";
+import { useToastContext } from "../../../hooks/useToastContext";
+import { ToastType } from "../../../components/toast/Toast";
 
 const SignInPage = () => {
   const [error, setError] = useState(false);
@@ -16,12 +18,16 @@ const SignInPage = () => {
   const httpRequestService = useHttpRequestService();
   const navigate = useNavigate();
   const { t } = useTranslation();
+  const { setToastMessage } = useToastContext();
 
   const handleSubmit = (values: { username: string; password: string }) => {
     httpRequestService
       .signIn(values)
       .then(() => navigate("/"))
-      .catch(() => setError(true));
+      .catch(() => {
+        setError(true);
+        setToastMessage("Login toast", ToastType.ALERT);
+      });
   };
 
   return (
@@ -69,6 +75,7 @@ const SignInPage = () => {
                   buttonType={ButtonType.OUTLINED}
                   size={"MEDIUM"}
                   onClick={() => navigate("/sign-up")}
+                  type="button"
                 />
               </div>
             </Form>

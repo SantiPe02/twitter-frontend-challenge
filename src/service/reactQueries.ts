@@ -46,6 +46,8 @@ export const useCreatePost = () => {
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["posts"] });
       queryClient.invalidateQueries({ queryKey: ["paginatedPosts"] });
+      queryClient.invalidateQueries({ queryKey: ["post"] });
+      queryClient.invalidateQueries({ queryKey: ["me"] });
     },
   });
 };
@@ -99,16 +101,16 @@ export const useDeleteUser = () => {
 };
 
 export const useCreateComment = () => {
+  const queryClient = useQueryClient();
   const service = useHttpRequestService();
-  const dispatch = useDispatch();
 
   return useMutation({
     mutationFn: (data: PostData) => service.createComment(data),
-    onSuccess: async (res) => {
-      const comments = await service.getCommentsByPostId(
-        res.commentPostReference
-      );
-      dispatch(updateFeed(comments));
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["posts"] });
+      queryClient.invalidateQueries({ queryKey: ["paginatedPosts"] });
+      queryClient.invalidateQueries({ queryKey: ["post"] });
+      queryClient.invalidateQueries({ queryKey: ["comments"] });
     },
   });
 };
@@ -130,6 +132,7 @@ export const useFollowUserMutation = () => {
     mutationFn: (userId: string) => service.followUser(userId),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["posts"] });
+      queryClient.invalidateQueries({ queryKey: ["paginatedPosts"] });
     },
   });
 };
@@ -142,6 +145,7 @@ export const useUnfollowUserMutation = () => {
     mutationFn: (userId: string) => service.unfollowUser(userId),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["posts"] });
+      queryClient.invalidateQueries({ queryKey: ["paginatedPosts"] });
     },
   });
 };
