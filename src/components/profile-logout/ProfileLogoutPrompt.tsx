@@ -3,11 +3,12 @@ import {
   StyledLogoutPrompt,
   StyledProfileLogoutPromptContainer,
 } from "./StyledProfileLogoutPromptContainer";
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import icon from "../../assets/icon.jpg";
 import { StyledP } from "../common/text";
 import { StyledContainer } from "../common/Container";
 import { useGetMe } from "../../service/reactQueries";
+import { s3Url } from "../../util/Constants";
 
 interface ProfileLogoutPromptProps {
   margin: string;
@@ -44,7 +45,7 @@ const ProfileLogoutPrompt = ({
       cursor={"pointer"}
     >
       <StyledProfileLogoutPromptContainer direction={direction}>
-        <img src={user?.profilePicture ?? icon} className="icon" alt="Icon" />
+        <img src={user?.profilePicture ? s3Url + user.profilePicture : icon} className="icon" alt="Icon" />
         {logoutOpen && (
           <StyledLogoutPrompt margin={margin} onClick={handleButtonClick}>
             <LogoutPrompt show={logoutOpen} onClose={handleLogoutClose} />

@@ -8,19 +8,6 @@ import { StyledUserSuggestionContainer } from "./UserSeuggestionContainer";
 import { useGetPosts } from "../../service/reactQueries";
 
 const HomePage = () => {
-  const dispatch = useAppDispatch();
-  const navigate = useNavigate();
-  const query = useAppSelector((state) => state.user.query);
-  const { data, isError } = useGetPosts(query);
-
-  if (data) {
-    dispatch(updateFeed(data));
-  }
-
-  if (isError) {
-    navigate("/sign-in");
-  }
-
   return (
     <>
       <ContentContainer />

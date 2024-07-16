@@ -6,6 +6,7 @@ import { StyledModalContainer } from "./ModalContainer";
 import { StyledContainer } from "../common/Container";
 import { StyledH5, StyledP } from "../common/text";
 import { useClickOutside } from "../../hooks/useClickOutside";
+import { createPortal } from "react-dom";
 
 interface ModalProps {
   show: boolean;
@@ -37,7 +38,7 @@ const Modal = ({
 
   return (
     <>
-      {show && (
+      {show && createPortal(
         <StyledBlurredBackground>
             <StyledModalContainer ref={backgroundRef} onClick={handleModalClick}>
               <StyledContainer alignItems={"center"} justifyContent={"center"}>
@@ -66,7 +67,8 @@ const Modal = ({
                 </StyledContainer>
               </StyledContainer>
             </StyledModalContainer>
-        </StyledBlurredBackground>
+        </StyledBlurredBackground>,
+        document.getElementById("modal-root") as HTMLElement
       )}
     </>
   );

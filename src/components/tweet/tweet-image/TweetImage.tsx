@@ -7,6 +7,8 @@ import {
   StyledOverflowContainer,
 } from "../../common/Container";
 import { StyledRemoveIconContainer } from "./RemoveIconContainer";
+import { s3Url } from "../../../util/Constants";
+import { isUuid } from "../../../util/validate";
 
 interface TweetImageProps {
   src: string;
@@ -35,14 +37,14 @@ const TweetImage = ({
           </StyledRemoveIconContainer>
         )}
         <StyledTweetImage
-          src={src}
+          src={isUuid(src)? s3Url + src : src}
           alt={alt}
           onClick={() => setShowModal(true)}
         />
       </StyledOverflowContainer>
       <ImageModal
         show={showModal}
-        src={src}
+        src={s3Url + src}
         alt={alt}
         onClose={() => setShowModal(false)}
       />

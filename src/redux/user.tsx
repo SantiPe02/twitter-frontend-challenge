@@ -7,12 +7,14 @@ type InitalStateType = {
   query: string;
   length: number;
   currentChat?: ChatDTO;
+  lastPostId: string;
 };
 
 const initialState: InitalStateType = {
   feed: [],
   length: LIMIT,
   query: "",
+  lastPostId: "",
 };
 
 const userSlice = createSlice({
@@ -38,10 +40,14 @@ const userSlice = createSlice({
         state.currentChat.messages.push(action.payload);
       }
     },
+
+    setLastPostId: (state, action) => {
+      state.lastPostId = action.payload;
+    },
   },
 });
 
-export const { updateFeed, setLength, setQuery, setChat, addMessage } =
+export const { updateFeed, setLength, setQuery, setChat, addMessage, setLastPostId } =
   userSlice.actions;
 
 export default userSlice.reducer;
