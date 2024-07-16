@@ -36,9 +36,16 @@ const httpRequestService = {
     }
   },
   createPost: async (data: PostData) => {
-    const res = await axios.post(`${url}/post`, data, {
-      headers: getAuthHeaders(),
-    });
+    const imagesId = data.images?.map((i) => i.name);
+    console.log(imagesId);
+    const res = await axios.post(
+      `${url}/post`,
+      { content: data.content, images: imagesId },
+      {
+        headers: getAuthHeaders(),
+      }
+    );
+    console.log(res.data)
     if (res.status === 201) {
       const { upload } = S3Service;
       for (const imageUrl of res.data.images) {

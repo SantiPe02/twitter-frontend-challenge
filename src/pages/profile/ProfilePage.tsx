@@ -11,6 +11,8 @@ import ProfileFeed from "../../components/feed/ProfileFeed";
 import { StyledContainer } from "../../components/common/Container";
 import { StyledH5 } from "../../components/common/text";
 import { useGetMe } from "../../service/reactQueries";
+import { s3Url } from "../../util/Constants";
+import Icon from "../../assets/icon.jpg";
 
 const ProfilePage = () => {
   const [profile, setProfile] = useState<User | null>(null);
@@ -131,7 +133,7 @@ const ProfilePage = () => {
                 <ProfileInfo
                   name={profile!.name!}
                   username={profile!.username}
-                  profilePicture={profile!.profilePicture}
+                  profilePicture={profile!.profilePicture? s3Url + profile.profilePicture : Icon}
                 />
                 <Button
                   buttonType={handleButtonType().component}

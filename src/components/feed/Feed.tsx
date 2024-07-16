@@ -3,6 +3,7 @@ import { StyledContainer } from "../common/Container";
 import Tweet from "../tweet/Tweet";
 import Loader from "../loader/Loader";
 
+
 interface FeedProps {
   posts: Post[];
   loading: boolean;

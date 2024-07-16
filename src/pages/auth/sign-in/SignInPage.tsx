@@ -26,7 +26,7 @@ const SignInPage = () => {
       .then(() => navigate("/"))
       .catch(() => {
         setError(true);
-        setToastMessage("Login toast", ToastType.ALERT);
+        setToastMessage("Check your credentials", ToastType.ALERT);
       });
   };
 

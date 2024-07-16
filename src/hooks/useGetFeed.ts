@@ -1,17 +1,20 @@
 import { useEffect, useState } from "react";
-import { useHttpRequestService } from "../service/HttpRequestService";
-import { setLength, updateFeed } from "../redux/user";
+import { setLength, setQuery, updateFeed } from "../redux/user";
 import { useAppDispatch, useAppSelector } from "../redux/hooks";
-import { useGetPosts } from "../service/reactQueries";
+import { useHttpRequestService } from "../service/HttpRequestService";
 
-export const useGetFeed = () => {
+interface GetFeedProps {
+  initialQuery: string;
+}
+
+export const useGetFeed = ({ initialQuery }: GetFeedProps) => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(false);
   const posts = useAppSelector((state) => state.user.feed);
-  const query = useAppSelector((state) => state.user.query);
-  const { data } = useGetPosts(query);
-
   const dispatch = useAppDispatch();
+  dispatch(setQuery(initialQuery));
+  const query = useAppSelector((state) => state.user.query);
+
 
   const service = useHttpRequestService();
 
@@ -19,13 +22,15 @@ export const useGetFeed = () => {
     try {
       setLoading(true);
       setError(false);
-      const updatedPosts = Array.from(new Set(data));
-      dispatch(updateFeed(updatedPosts));
-      dispatch(setLength(updatedPosts.length));
-      setLoading(false);
+      service.getPosts(query).then((res) => {
+        const updatedPosts =
+          res && posts ? Array.from(new Set([...posts, ...res])) : [];
+        dispatch(updateFeed(updatedPosts));
+        dispatch(setLength(updatedPosts.length));
+        setLoading(false);
+      });
     } catch (e) {
       setError(true);
-      console.log(e);
     }
   }, [query]);
 

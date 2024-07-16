@@ -4,6 +4,7 @@ import Avatar from "../../common/avatar/Avatar";
 import Icon from "../../../assets/icon.jpg";
 import { StyledDot } from "../../common/Dot";
 import { useNavigate } from "react-router-dom";
+import { s3Url } from "../../../util/Constants";
 
 interface UserPostDataProps {
   createdAt: Date;
@@ -28,7 +29,7 @@ const AuthorData = ({
   return (
     <StyledAuthorDataContainer>
       <Avatar
-        src={profilePicture === null ? Icon : profilePicture!}
+        src={profilePicture === null ? Icon : s3Url + profilePicture!}
         alt={name}
         onClick={redirectToProfile}
       />

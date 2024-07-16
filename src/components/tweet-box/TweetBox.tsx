@@ -1,8 +1,6 @@
 import { ChangeEvent, useState } from "react";
 import Button from "../button/Button";
 import TweetInput from "../tweet-input/TweetInput";
-import { useHttpRequestService } from "../../service/HttpRequestService";
-import { setLength, updateFeed } from "../../redux/user";
 import ImageContainer from "../tweet/tweet-image/ImageContainer";
 import { BackArrowIcon } from "../icon/Icon";
 import ImageInput from "../common/ImageInput";
@@ -11,16 +9,15 @@ import { ButtonType } from "../button/StyledButton";
 import { StyledTweetBoxContainer } from "./TweetBoxContainer";
 import { StyledContainer } from "../common/Container";
 import { StyledButtonContainer } from "./ButtonContainer";
-import { useDispatch, useSelector } from "react-redux";
-import { RootState } from "../../redux/store";
 import {
   useCreateComment,
   useCreatePost,
   useGetMe,
-  useGetPosts,
 } from "../../service/reactQueries";
 import { useToastContext } from "../../hooks/useToastContext";
 import { ToastType } from "../toast/Toast";
+import { s3Url } from "../../util/Constants";
+import Icon from "../../assets/icon.jpg";
 
 interface TweetBoxProps {
   parentId?: string;
@@ -35,12 +32,8 @@ const TweetBox = (props: TweetBoxProps) => {
   const [images, setImages] = useState<File[]>([]);
   const [imagesPreview, setImagesPreview] = useState<string[]>([]);
 
-  const { length, query } = useSelector((state: RootState) => state.user);
-  const dispatch = useDispatch();
   const { t } = useTranslation();
   const { data: user } = useGetMe();
-  const { data: posts } = useGetPosts(query);
-  const service = useHttpRequestService();
 
   const handleChange = (e: ChangeEvent<HTMLTextAreaElement>) => {
     setContent(e.target.value);
@@ -55,7 +48,7 @@ const TweetBox = (props: TweetBoxProps) => {
       if (parentId) {
         createCommentMutation.mutate({ content, images, parentId });
         setToastMessage("Comment sent", ToastType.SUCCESS);
-      } else {
+    } else {
         createPostMutation.mutate({ content, images, parentId });
         setToastMessage("Post sent", ToastType.SUCCESS);
       }
@@ -105,7 +98,7 @@ const TweetBox = (props: TweetBoxProps) => {
           maxLength={240}
           placeholder={t("placeholder.tweet")}
           value={content}
-          src={user?.profilePicture}
+          src={user?.profilePicture? s3Url + user.profilePicture : Icon}
         />
         <StyledContainer padding={"0 0 0 10%"}>
           <ImageContainer
