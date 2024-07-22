@@ -12,6 +12,7 @@ import CommentPage from "../../pages/create-comment-page/CommentPage";
 import PostPage from "../../pages/post-page/PostPage";
 import WithAuth from "../auth/WithAuth";
 import { ToastProvider } from "../toast/ToastContext";
+import ChatPage from "../../pages/chat/ChatPage";
 
 const WithNav = () => {
   return (
@@ -72,6 +73,10 @@ export const ROUTER = createBrowserRouter([
                 path: "/post/:id",
                 element: <CommentPage />,
               },
+              {
+                path: "/chat",
+                element: <ChatPage />,
+              }
             ],
           },
         ],

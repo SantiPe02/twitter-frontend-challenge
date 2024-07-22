@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { useHttpRequestService } from "../service/HttpRequestService";
-import { setLength, updateFeed } from "../redux/user";
+import { setLength, updateComments, updateFeed } from "../redux/user";
 import { useAppDispatch, useAppSelector } from "../redux/hooks";
 import { useGetCommentsByPostId } from "../service/reactQueries";
 
@@ -10,18 +10,16 @@ interface UseGetCommentsProps {
 
 export const useGetComments = ({ postId }: UseGetCommentsProps) => {
   const [error, setError] = useState(false);
-  const posts = useAppSelector((state) => state.user.feed);
+  const posts = useAppSelector((state) => state.user.comments);
   const { data, isLoading: loading } = useGetCommentsByPostId(postId);
 
   const dispatch = useAppDispatch();
-
-  const service = useHttpRequestService();
 
   useEffect(() => {
     try {
       setError(false);
       const updatedPosts = Array.from(new Set(data));
-      dispatch(updateFeed(updatedPosts));
+      dispatch(updateComments(updatedPosts));
       dispatch(setLength(updatedPosts.length));
     } catch (e) {
       setError(true);

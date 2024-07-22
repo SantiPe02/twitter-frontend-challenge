@@ -1,8 +1,6 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useHttpRequestService } from "./HttpRequestService";
 import { PostData } from ".";
-import { useDispatch } from "react-redux";
-import { updateFeed } from "../redux/user";
 
 //Posts:
 
@@ -46,8 +44,6 @@ export const useCreatePost = () => {
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["posts"] });
       queryClient.invalidateQueries({ queryKey: ["paginatedPosts"] });
-      queryClient.invalidateQueries({ queryKey: ["post"] });
-      queryClient.invalidateQueries({ queryKey: ["me"] });
     },
   });
 };
@@ -66,8 +62,6 @@ export const useCreateReaction = () => {
     mutationFn: (data: { postId: string; reaction: string }) =>
       service.createReaction(data.postId, data.reaction),
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["posts"] });
-      queryClient.invalidateQueries({ queryKey: ["paginatedPosts"] });
       queryClient.invalidateQueries({ queryKey: ["post"] });
     },
   });
@@ -81,8 +75,6 @@ export const useDeleteReaction = () => {
     mutationFn: (data: { postId: string; reaction: string }) =>
       service.deleteReaction(data.postId, data.reaction),
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["posts"] });
-      queryClient.invalidateQueries({ queryKey: ["paginatedPosts"] });
       queryClient.invalidateQueries({ queryKey: ["post"] });
     },
   });
@@ -106,11 +98,10 @@ export const useCreateComment = () => {
 
   return useMutation({
     mutationFn: (data: PostData) => service.createComment(data),
-    onSuccess: () => {
+    onSuccess: (_, variables) => {
+      queryClient.invalidateQueries({ queryKey: ["comments", variables.parentId] });
       queryClient.invalidateQueries({ queryKey: ["posts"] });
       queryClient.invalidateQueries({ queryKey: ["paginatedPosts"] });
-      queryClient.invalidateQueries({ queryKey: ["post"] });
-      queryClient.invalidateQueries({ queryKey: ["comments"] });
     },
   });
 };

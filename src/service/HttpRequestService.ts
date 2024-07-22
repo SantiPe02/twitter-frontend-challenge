@@ -45,7 +45,7 @@ const httpRequestService = {
         headers: getAuthHeaders(),
       }
     );
-    console.log(res.data)
+    console.log(res.data);
     if (res.status === 201) {
       const { upload } = S3Service;
       for (const imageUrl of res.data.images) {
@@ -247,12 +247,10 @@ const httpRequestService = {
     }
   },
 
-  createChat: async (id: string) => {
+  createChat: async (name: string) => {
     const res = await axios.post(
       `${url}/chat`,
-      {
-        users: [id],
-      },
+      { name: name },
       {
         headers: getAuthHeaders(),
       }
@@ -271,6 +269,18 @@ const httpRequestService = {
     if (res.status === 200) {
       return res.data;
     }
+  },
+
+  addUserToChat: async (chatId: string, userId: string) => {
+    const res = await axios.post(
+      `${url}/chat/add-user/${chatId}`,
+      { userId: userId },
+      {
+        headers: getAuthHeaders(),
+      }
+    );
+
+    return res.status
   },
 
   deletePost: async (id: string) => {

@@ -2,7 +2,7 @@ import React, { useRef, useState } from "react";
 import { DeleteIcon } from "../../icon/Icon";
 import Modal from "../../modal/Modal";
 import Button from "../../button/Button";
-import { updateFeed } from "../../../redux/user";
+import { updateComments, updateFeed } from "../../../redux/user";
 import { useTranslation } from "react-i18next";
 import { ButtonType } from "../../button/StyledButton";
 import { useAppDispatch, useAppSelector } from "../../../redux/hooks";
@@ -27,12 +27,15 @@ export const DeletePostModal = ({
   const dispatch = useAppDispatch();
   const { t } = useTranslation();
   const deletePostMutation = useDeletePostMutation();
+  const comments = useAppSelector((state) => state.user.comments);
 
   const handleDelete = () => {
     try {
       deletePostMutation.mutate(id);
       const newFeed = feed.filter((post: Post) => post.id !== id);
       dispatch(updateFeed(newFeed));
+      const newCommentFeed = comments.filter((post: Post) => post.id !== id);
+      dispatch(updateComments(newCommentFeed));
       handleClose();
     } catch (error) {
       console.log(error);
@@ -46,13 +49,13 @@ export const DeletePostModal = ({
 
   const outsideClickRef = useRef<HTMLDivElement | null>(null);
   const handler = () => {
-    if(showModal) {
-      return
+    if (showModal) {
+      return;
     }
     onClose();
   };
 
-  useClickOutside(outsideClickRef, handler)
+  useClickOutside(outsideClickRef, handler);
 
   return (
     <>

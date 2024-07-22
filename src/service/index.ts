@@ -64,15 +64,15 @@ export interface User {
 
 export interface MessageDTO {
   id: string;
-  content: string;
-  createdAt: Date;
-  chatId: string;
   senderId: string;
-  sender: Author;
+  chatId: string;
+  content: string;
+  date: Date;
 }
 
 export interface ChatDTO {
   id: string;
+  name: string;
   users: Author[];
   messages: MessageDTO[];
 }
