@@ -18,6 +18,8 @@ import { useToastContext } from "../../hooks/useToastContext";
 import { ToastType } from "../toast/Toast";
 import { s3Url } from "../../util/Constants";
 import Icon from "../../assets/icon.jpg";
+import { useAppDispatch, useAppSelector } from "../../redux/hooks";
+import { updateComments } from "../../redux/user";
 
 interface TweetBoxProps {
   parentId?: string;
@@ -31,6 +33,8 @@ const TweetBox = (props: TweetBoxProps) => {
   const [content, setContent] = useState("");
   const [images, setImages] = useState<File[]>([]);
   const [imagesPreview, setImagesPreview] = useState<string[]>([]);
+  const { feed, comments } = useAppSelector((state) => state.user);
+  const dispatch = useAppDispatch();
 
   const { t } = useTranslation();
   const { data: user } = useGetMe();
@@ -48,7 +52,7 @@ const TweetBox = (props: TweetBoxProps) => {
       if (parentId) {
         createCommentMutation.mutate({ content, images, parentId });
         setToastMessage("Comment sent", ToastType.SUCCESS);
-    } else {
+      } else {
         createPostMutation.mutate({ content, images, parentId });
         setToastMessage("Post sent", ToastType.SUCCESS);
       }
@@ -98,7 +102,7 @@ const TweetBox = (props: TweetBoxProps) => {
           maxLength={240}
           placeholder={t("placeholder.tweet")}
           value={content}
-          src={user?.profilePicture? s3Url + user.profilePicture : Icon}
+          src={user?.profilePicture ? s3Url + user.profilePicture : Icon}
         />
         <StyledContainer padding={"0 0 0 10%"}>
           <ImageContainer

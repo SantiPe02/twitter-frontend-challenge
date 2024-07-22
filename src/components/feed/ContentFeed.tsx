@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import Feed from "./Feed";
 import { useGetFeed } from "../../hooks/useGetFeed";
 import { useAppDispatch, useAppSelector } from "../../redux/hooks";
@@ -30,6 +30,12 @@ const ContentFeed = () => {
   };
 
   useInfiniteScroll(scrollRef, onScrollCallback, observerOptions);
+
+  useEffect(() => {
+    return () => {
+      dispatch(setLastPostId(""));
+    };
+  }, []);
 
   return (
     <div>

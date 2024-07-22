@@ -15,6 +15,7 @@ interface ModalProps {
   img?: string;
   onClose: () => void;
   acceptButton: ReactNode;
+  children?: ReactNode;
 }
 
 const Modal = ({
@@ -24,6 +25,7 @@ const Modal = ({
   onClose,
   img,
   title,
+  children,
 }: ModalProps) => {
   const handleModalClick = (event: React.MouseEvent) => {
     event.stopPropagation();
@@ -54,6 +56,7 @@ const Modal = ({
                   <StyledContainer gap={img ? "8px" : "24px"}>
                     <StyledH5>{title}</StyledH5>
                     <StyledP primary={false}>{text}</StyledP>
+                    {children}
                   </StyledContainer>
                   <StyledContainer alignItems={"center"}>
                     {acceptButton}
