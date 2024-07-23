@@ -1,4 +1,3 @@
-import React from "react";
 import Feed from "./Feed";
 import { useGetComments } from "../../hooks/useGetComments";
 
@@ -10,10 +9,6 @@ const CommentFeed = ({ postId }: CommentFeedProps) => {
     postId,
   });
 
-  return (
-    <>
-      <Feed posts={posts} loading={loading} />
-    </>
-  );
+  return <Feed posts={posts} loading={loading} />;
 };
 export default CommentFeed;

@@ -1,34 +1,41 @@
-import React, { useState } from "react";
+import React, { useEffect } from "react";
 import { StyledToastContainer } from "./ToastContainer";
-import { AlertIcon } from "../icon/Icon";
+import { AlertIcon, SuccessIcon } from "../icon/Icon";
+import { useToastContext } from "../../hooks/useToastContext";
 
 export enum ToastType {
   ALERT = "ALERT",
+  SUCCESS = "SUCCESS",
 }
 
 interface ToastProps {
   message: string;
   type: ToastType;
-  show?: boolean;
 }
 
-const Toast = ({ message, type, show }: ToastProps) => {
-  const [isShown, setIsShown] = useState<boolean>(show ?? true);
-
+const Toast = ({ message, type }: ToastProps) => {
   const iconMap = {
     [ToastType.ALERT]: <AlertIcon />,
+    [ToastType.SUCCESS]: <SuccessIcon />,
   };
+  const { clearContext } = useToastContext();
+
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      clearContext();
+    }, 5000);
+
+    return () => clearTimeout(timer);
+  }, []);
 
   const toastIcon = iconMap[type] || null;
 
   return (
     <>
-      {isShown && (
-        <StyledToastContainer type={type} onClick={() => setIsShown(false)}>
-          {toastIcon}
-          <p>{message}</p>
-        </StyledToastContainer>
-      )}
+      <StyledToastContainer type={type} onClick={() => {}}>
+        {toastIcon}
+        <p>{message}</p>
+      </StyledToastContainer>
     </>
   );
 };

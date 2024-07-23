@@ -21,7 +21,8 @@ export const SearchBar = () => {
     clearTimeout(debounceTimer);
     debounceTimer = setTimeout(async () => {
       try {
-        setResults(await service.searchUsers(inputQuery, 4, 0));
+        const results = await service.searchUsers(inputQuery, 4, 0);
+        setResults(results? results : []);
       } catch (error) {
         console.log(error);
       }

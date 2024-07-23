@@ -6,9 +6,7 @@ const ProfileFeed = () => {
   const { posts, loading } = useGetProfilePosts();
 
   return (
-    <>
       <Feed posts={posts} loading={loading} />
-    </>
   );
 };
 export default ProfileFeed;

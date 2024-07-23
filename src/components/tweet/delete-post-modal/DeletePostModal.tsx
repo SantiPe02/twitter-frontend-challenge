@@ -1,14 +1,15 @@
-import React, { useState } from "react";
+import React, { useRef, useState } from "react";
 import { DeleteIcon } from "../../icon/Icon";
 import Modal from "../../modal/Modal";
 import Button from "../../button/Button";
-import { updateFeed } from "../../../redux/user";
-import { useHttpRequestService } from "../../../service/HttpRequestService";
+import { updateComments, updateFeed } from "../../../redux/user";
 import { useTranslation } from "react-i18next";
 import { ButtonType } from "../../button/StyledButton";
 import { useAppDispatch, useAppSelector } from "../../../redux/hooks";
 import { Post } from "../../../service";
 import { StyledDeletePostModalContainer } from "./DeletePostModalContainer";
+import { useDeletePostMutation } from "../../../service/reactQueries";
+import { useClickOutside } from "../../../hooks/useClickOutside";
 
 interface DeletePostModalProps {
   show: boolean;
@@ -24,14 +25,17 @@ export const DeletePostModal = ({
   const [showModal, setShowModal] = useState<boolean>(false);
   const feed = useAppSelector((state) => state.user.feed);
   const dispatch = useAppDispatch();
-  const service = useHttpRequestService();
   const { t } = useTranslation();
+  const deletePostMutation = useDeletePostMutation();
+  const comments = useAppSelector((state) => state.user.comments);
 
   const handleDelete = () => {
     try {
-      service.deletePost(id).then((res) => console.log(res));
+      deletePostMutation.mutate(id);
       const newFeed = feed.filter((post: Post) => post.id !== id);
       dispatch(updateFeed(newFeed));
+      const newCommentFeed = comments.filter((post: Post) => post.id !== id);
+      dispatch(updateComments(newCommentFeed));
       handleClose();
     } catch (error) {
       console.log(error);
@@ -43,11 +47,24 @@ export const DeletePostModal = ({
     onClose();
   };
 
+  const outsideClickRef = useRef<HTMLDivElement | null>(null);
+  const handler = () => {
+    if (showModal) {
+      return;
+    }
+    onClose();
+  };
+
+  useClickOutside(outsideClickRef, handler);
+
   return (
     <>
       {show && (
         <>
-          <StyledDeletePostModalContainer onClick={() => setShowModal(true)}>
+          <StyledDeletePostModalContainer
+            ref={outsideClickRef}
+            onClick={() => setShowModal(true)}
+          >
             <DeleteIcon />
             <p>{t("buttons.delete")}</p>
           </StyledDeletePostModalContainer>

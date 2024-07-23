@@ -20,18 +20,21 @@ export interface PostData {
 export interface Post {
   id: string;
   content: string;
-  parentId?: string;
+  commentPostReference?: string;
   images?: string[];
   createdAt: Date;
   authorId: string;
   author: Author;
   reactions: Reaction[];
   comments: Post[];
+  qtyComments: number;
+  qtyLikes: number;
+  qtyRetweets: number;
 }
 
 export interface Reaction {
   id: string;
-  type: string;
+  reactionType: string;
   createdAt: Date;
   userId: string;
   postId: string;
@@ -61,15 +64,15 @@ export interface User {
 
 export interface MessageDTO {
   id: string;
-  content: string;
-  createdAt: Date;
-  chatId: string;
   senderId: string;
-  sender: Author;
+  chatId: string;
+  content: string;
+  date: Date;
 }
 
 export interface ChatDTO {
   id: string;
+  name: string;
   users: Author[];
   messages: MessageDTO[];
 }

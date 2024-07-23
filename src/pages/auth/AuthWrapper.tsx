@@ -27,7 +27,7 @@ const StyledSignInWrapper = styled.div`
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    gap: 16px;
+    gap: 2vh;
   }
 
   img {

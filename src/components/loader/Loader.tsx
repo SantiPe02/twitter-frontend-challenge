@@ -23,9 +23,13 @@ const StyledLoaderSpinner = styled.div`
   animation: ${spinAnimation} 0.8s linear infinite;
 `;
 
-const Loader = () => {
+interface LoaderProps {
+  ref?: React.RefObject<HTMLDivElement>;
+}
+
+const Loader = ({ref}: LoaderProps) => {
   return (
-    <StyledLoaderContainer>
+    <StyledLoaderContainer ref={ref}>
       <StyledLoaderSpinner />
     </StyledLoaderContainer>
   );

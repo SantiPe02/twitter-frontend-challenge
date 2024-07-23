@@ -18,6 +18,8 @@ export enum IconType {
   SETTINGS = "settings",
   DELETE = "delete",
   ALERT = "alert",
+  SUCCESS = "success",
+  ARROW = "arrow",
 }
 
 interface IconProps {
@@ -48,6 +50,8 @@ export const Icon = (props: IconProps) => {
     [IconType.SETTINGS]: <SettingsIcon {...props} />,
     [IconType.DELETE]: <DeleteIcon {...props} />,
     [IconType.ALERT]: <AlertIcon {...props} />,
+    [IconType.SUCCESS]: <SuccessIcon {...props} />,
+    [IconType.ARROW]: <ArrowIcon {...props} />,
   };
 };
 
@@ -553,3 +557,40 @@ export const AlertIcon = (props: IconProps) => {
     </svg>
   );
 };
+
+export const SuccessIcon = (props: IconProps) => {
+  return (
+    <svg
+      width={props.width ?? "24"}
+      height={props.height ?? "24"}
+      viewBox="0 0 24 24"
+      fill="none"
+      xmlns="http://www.w3.org/2000/svg"
+      onClick={props.onClick}
+    >
+      <circle cx="12" cy="12" r="10" stroke={props.color ?? "#4A99E9"} strokeWidth="2"/>
+      <path d="M9 12l2 2 4-4" stroke={props.color ?? "#4A99E9"} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+    </svg>
+  );
+}
+
+export const ArrowIcon = (props: IconProps) => {
+  return (
+    <svg
+      width={props.width ?? "24"}
+      height={props.height ?? "24"}
+      viewBox="0 0 24 24"
+      fill="none"
+      xmlns="http://www.w3.org/2000/svg"
+      onClick={props.onClick}
+    >
+      <path
+        d="M9 18L15 12L9 6"
+        stroke={props.color ?? "black"}
+        strokeWidth="2"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      />
+    </svg>
+  );
+}

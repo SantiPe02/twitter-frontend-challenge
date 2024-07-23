@@ -10,6 +10,9 @@ import ProfilePage from "../../pages/profile/ProfilePage";
 import TweetPage from "../../pages/create-tweet-page/TweetPage";
 import CommentPage from "../../pages/create-comment-page/CommentPage";
 import PostPage from "../../pages/post-page/PostPage";
+import WithAuth from "../auth/WithAuth";
+import { ToastProvider } from "../toast/ToastContext";
+import ChatPage from "../../pages/chat/ChatPage";
 
 const WithNav = () => {
   return (
@@ -20,41 +23,63 @@ const WithNav = () => {
   );
 };
 
+const WithToast = () => {
+  return (
+    <ToastProvider>
+      <Outlet />
+    </ToastProvider>
+  );
+};
+
 export const ROUTER = createBrowserRouter([
   {
-    path: "/sign-up",
-    element: <SignUpPage />,
-  },
-  {
-    path: "/sign-in",
-    element: <SignInPage />,
-  },
-  {
-    element: <WithNav />,
+    element: <WithToast />,
     children: [
       {
-        path: "/",
-        element: <HomePage />,
+        path: "/sign-up",
+        element: <SignUpPage />,
       },
       {
-        path: "/recommendations",
-        element: <RecommendationPage />,
+        path: "/sign-in",
+        element: <SignInPage />,
       },
       {
-        path: "/profile/:id",
-        element: <ProfilePage />,
-      },
-      {
-        path: "/post/:id",
-        element: <PostPage />,
-      },
-      {
-        path: "/compose/tweet",
-        element: <TweetPage />,
-      },
-      {
-        path: "/post/:id",
-        element: <CommentPage />,
+        element: <WithAuth />,
+        children: [
+          {
+            element: <WithNav />,
+            children: [
+              {
+                path: "/",
+                element: <HomePage />,
+              },
+              {
+                path: "/recommendations",
+                element: <RecommendationPage />,
+              },
+              {
+                path: "/profile/:id",
+                element: <ProfilePage />,
+              },
+              {
+                path: "/post/:id",
+                element: <PostPage />,
+              },
+              {
+                path: "/compose/tweet",
+                element: <TweetPage />,
+              },
+              {
+                path: "/post/:id",
+                element: <CommentPage />,
+              },
+              {
+                path: "/chat",
+                element: <ChatPage />,
+              }
+            ],
+          },
+        ],
       },
     ],
   },
