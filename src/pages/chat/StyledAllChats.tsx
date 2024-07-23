@@ -13,6 +13,8 @@ export const StyledChatContainer = styled.div`
   padding: 2vh;
   border-top: 1px solid ${(props) => props.theme.colors.containerLine};
 
+  cursor: pointer;
+
   &:hover {
     background-color: ${(props) => props.theme.colors.hover};
   }

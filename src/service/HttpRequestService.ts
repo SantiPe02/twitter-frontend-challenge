@@ -283,6 +283,14 @@ const httpRequestService = {
     return res.status
   },
 
+  deleteChat: async (id: string) => {
+    const res = await axios.delete(`${url}/chat/${id}`, {
+      headers: getAuthHeaders(),
+    });
+
+    return res.status
+  },
+
   deletePost: async (id: string) => {
     await axios.delete(`${url}/post/${id}`, {
       headers: getAuthHeaders(),

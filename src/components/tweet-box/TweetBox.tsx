@@ -18,8 +18,6 @@ import { useToastContext } from "../../hooks/useToastContext";
 import { ToastType } from "../toast/Toast";
 import { s3Url } from "../../util/Constants";
 import Icon from "../../assets/icon.jpg";
-import { useAppDispatch, useAppSelector } from "../../redux/hooks";
-import { updateComments } from "../../redux/user";
 
 interface TweetBoxProps {
   parentId?: string;
@@ -33,8 +31,6 @@ const TweetBox = (props: TweetBoxProps) => {
   const [content, setContent] = useState("");
   const [images, setImages] = useState<File[]>([]);
   const [imagesPreview, setImagesPreview] = useState<string[]>([]);
-  const { feed, comments } = useAppSelector((state) => state.user);
-  const dispatch = useAppDispatch();
 
   const { t } = useTranslation();
   const { data: user } = useGetMe();

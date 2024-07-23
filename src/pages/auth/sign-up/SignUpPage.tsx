@@ -105,11 +105,6 @@ const SignUpPage = () => {
                     error={(errors.name && touched.name) || error}
                     as={LabeledInput}
                   />
-                  <ErrorMessage
-                    name="username"
-                    component="p"
-                    className="error-message"
-                  />
                   <Field
                     required
                     name="username"
@@ -120,7 +115,7 @@ const SignUpPage = () => {
                     as={LabeledInput}
                   />
                   <ErrorMessage
-                    name="email"
+                    name="username"
                     component="p"
                     className="error-message"
                   />
@@ -132,6 +127,11 @@ const SignUpPage = () => {
                     title={t("input-params.email")}
                     error={(errors.email && touched.email) || error}
                     as={LabeledInput}
+                  />
+                  <ErrorMessage
+                    name="email"
+                    component="p"
+                    className="error-message"
                   />
                   <ErrorMessage
                     name="password"

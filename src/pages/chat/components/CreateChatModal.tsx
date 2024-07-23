@@ -12,8 +12,9 @@ import {
   StyledSearchUserResultsContainer,
 } from "./StyledSearchUserResults";
 import { StyledP } from "../../../components/common/text";
-import { useAppDispatch } from "../../../redux/hooks";
-import { addChat } from "../../../redux/user";
+import { useToastContext } from "../../../hooks/useToastContext";
+import { ToastType } from "../../../components/toast/Toast";
+import { socket } from "../../../service/socketService";
 
 interface CreateChatModalProps {
   show: boolean;
@@ -27,7 +28,7 @@ const CreateChatModal = ({ show, onClose }: CreateChatModalProps) => {
   const [results, setResults] = useState<Author[]>([]);
   const [next, setNext] = useState<boolean>(false);
   const service = useHttpRequestService();
-  const dispatch = useAppDispatch();
+  const { setToastMessage } = useToastContext();
 
   const handleChatNameChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setChatName(event.target.value);
@@ -36,8 +37,6 @@ const CreateChatModal = ({ show, onClose }: CreateChatModalProps) => {
   const handleNext = () => {
     setNext(true);
   };
-
-  console.log("userIds", userIds);
 
   const handleSearch = (event: any) => {
     setQuery(event.target.value);
@@ -50,14 +49,21 @@ const CreateChatModal = ({ show, onClose }: CreateChatModalProps) => {
     service
       .createChat(chatName)
       .then((chat) => {
-        dispatch(addChat(chat));
         userIds.forEach((userId) => {
           service.addUserToChat(chat.id, userId).catch((error) => {
             console.error("error", error);
+            service.deleteChat(chat.id);
+            setToastMessage("Error creating chat", ToastType.ALERT);
           });
         });
       })
+      .catch((error) => {
+        console.error("error", error);
+      })
       .finally(() => {
+        setTimeout(() => {
+          socket.emit("chats");
+        }, 1000);
         onClose();
       });
   };

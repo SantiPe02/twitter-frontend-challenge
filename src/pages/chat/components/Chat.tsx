@@ -38,7 +38,6 @@ const Chat = () => {
       if (socket.connected) {
         socket.emit("message", sendMessage.content);
         dispatch(addMessage(sendMessage));
-        socket.emit("chats");
         setMessage("");
       } else {
         console.log("Socket not connected");
@@ -52,7 +51,7 @@ const Chat = () => {
 
   const getMessageDate = (date: Date) => {
     const messageDate = new Date(date);
-    return messageDate.toLocaleDateString();
+    return messageDate.toLocaleTimeString().slice(0, 5);
   };
 
   return (
