@@ -40,9 +40,13 @@ const Modal = ({
 
   return (
     <>
-      {show && createPortal(
-        <StyledBlurredBackground>
-            <StyledModalContainer ref={backgroundRef} onClick={handleModalClick}>
+      {show &&
+        createPortal(
+          <StyledBlurredBackground>
+            <StyledModalContainer
+              ref={backgroundRef}
+              onClick={handleModalClick}
+            >
               <StyledContainer alignItems={"center"} justifyContent={"center"}>
                 {img && (
                   <img src={img} alt={"modal"} width={"32px"} height={"26px"} />
@@ -70,9 +74,9 @@ const Modal = ({
                 </StyledContainer>
               </StyledContainer>
             </StyledModalContainer>
-        </StyledBlurredBackground>,
-        document.getElementById("modal-root") as HTMLElement
-      )}
+          </StyledBlurredBackground>,
+          document.getElementById("modal-root") as HTMLElement
+        )}
     </>
   );
 };

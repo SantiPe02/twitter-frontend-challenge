@@ -12,6 +12,7 @@ interface ButtonProps {
 const Button = ({ text, size, buttonType, onClick, disabled, type }: ButtonProps) => {
   return (
     <StyledButton
+      data-testid="button"
       size={size}
       buttonType={disabled ? ButtonType.DISABLED : buttonType}
       disabled={buttonType === "DISABLED" || (disabled ? disabled : false)}
