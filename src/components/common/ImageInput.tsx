@@ -24,6 +24,7 @@ const ImageInput = ({ setImages, parentId }: ImageInputProps) => {
         <img src={Action} alt="Upload Images" />
       </label>
       <input
+        data-testid="image-input"
         type="file"
         id={`image-upload-${parentId ?? ""}`}
         accept="image/*"

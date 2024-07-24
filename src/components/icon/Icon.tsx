@@ -264,6 +264,7 @@ export const ActiveProfileIcon = (props: IconProps) => {
 export const BackArrowIcon = (props: IconProps) => {
   return (
     <svg
+      data-testid="back-arrow-icon"
       width={props.width ? props.width : "24"}
       height={props.height ? props.height : "24"}
       viewBox="0 0 24 24"
@@ -523,6 +524,7 @@ export const DeleteIcon = (props: IconProps) => {
 export const RemoveIcon = (props: IconProps) => {
   return (
     <svg
+      data-testid="remove-icon"
       width={props.width ? props.width : "24"}
       height={props.height ? props.height : "24"}
       viewBox="0 0 24 24"

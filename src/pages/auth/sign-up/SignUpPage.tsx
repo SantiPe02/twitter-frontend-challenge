@@ -22,7 +22,6 @@ interface SignUpData {
 }
 const SignUpPage = () => {
   const [error, setError] = useState(false);
-  const [errorMsg, setErrorMsg] = useState("");
 
   const httpRequestService = useHttpRequestService();
   const navigate = useNavigate();
@@ -74,7 +73,6 @@ const SignUpPage = () => {
             <img src={logo} alt="Twitter Logo" />
             <StyledH3>{t("title.register")}</StyledH3>
           </div>
-          <p className="error-message">{errorMsg}</p>
           <Formik
             initialValues={{
               name: "",
@@ -91,11 +89,6 @@ const SignUpPage = () => {
             {({ errors, touched }) => (
               <Form className="container">
                 <div className={"input-container"}>
-                  <ErrorMessage
-                    name="name"
-                    component="p"
-                    className="error-message"
-                  />
                   <Field
                     required
                     name="name"
@@ -106,7 +99,7 @@ const SignUpPage = () => {
                     as={LabeledInput}
                   />
                   <ErrorMessage
-                    name="username"
+                    name="name"
                     component="p"
                     className="error-message"
                   />
@@ -120,7 +113,7 @@ const SignUpPage = () => {
                     as={LabeledInput}
                   />
                   <ErrorMessage
-                    name="email"
+                    name="username"
                     component="p"
                     className="error-message"
                   />
@@ -134,7 +127,7 @@ const SignUpPage = () => {
                     as={LabeledInput}
                   />
                   <ErrorMessage
-                    name="password"
+                    name="email"
                     component="p"
                     className="error-message"
                   />
@@ -148,7 +141,7 @@ const SignUpPage = () => {
                     as={LabeledInput}
                   />
                   <ErrorMessage
-                    name="confirmPassword"
+                    name="password"
                     component="p"
                     className="error-message"
                   />
@@ -164,6 +157,11 @@ const SignUpPage = () => {
                     }
                     as={LabeledInput}
                   />
+                    <ErrorMessage
+                      name="confirmPassword"
+                      component="p"
+                      className="error-message"
+                    />
                 </div>
                 <div style={{ display: "flex", flexDirection: "column" }}>
                   <Button

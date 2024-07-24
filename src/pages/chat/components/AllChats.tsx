@@ -35,7 +35,7 @@ const AllChats = () => {
               onClick={() => handleChatClick(chat)}
             >
               <StyledChatInfo>
-                <StyledH6>{chat.name}</StyledH6>
+                <StyledH6>{chat?.name}</StyledH6>
                 {chat.messages.length > 0 ? (
                   <StyledP primary>
                     {chat.messages[chat.messages.length - 1].senderId ===

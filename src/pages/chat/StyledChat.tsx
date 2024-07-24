@@ -9,7 +9,7 @@ export const StyledChat = styled.div`
 
 export const StyledSendMessageContainer = styled.div`
   display: flex;
-  justify-content: space-around;
+  justify-content: center;
   align-items: center;
   gap: 2vh;
   padding: 2vh;
@@ -20,9 +20,6 @@ export const StyledChatInput = styled.input`
   border: none;
   outline: none;
   background: none;
-  display: flex;
-  flex-direction: column;
-  align-items: flex-start;
   width: 100%;
   border-radius: 20px;
   padding: 1vh;
