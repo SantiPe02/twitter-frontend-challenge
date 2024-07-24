@@ -19,11 +19,8 @@ const ChatPage = () => {
     useState<boolean>(false);
 
   useEffect(() => {
-    socket.on("connect", () => {
-      console.log("Connected to server");
-      socket.emit("chats");
-    });
     socket.connect();
+    socket.emit("chats");
 
     socket.on("chats", (chats) => {
       dispatch(setChats(chats));
